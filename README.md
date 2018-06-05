@@ -1,6 +1,6 @@
 # dapp-notapoet
 
-> A Vue.js project
+> Nas-Dapp
 
 ## Build Setup
 
