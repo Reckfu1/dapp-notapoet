@@ -25,10 +25,7 @@
 <script>
 import swiper from '@/components/swiper'
 let dappContactAddress = "n1g5FmLHcGs8FqMyEApGMCv9uCy9dyJc7G4"
-// let nebulas = require("nebulas"), Account = Account, neb = new nebulas.Neb()
-// neb.setRequest(new nebulas.HttpRequest("https://mainnet.nebulas.io"))
 import NebPay from 'nebpay'
-// let NebPay = require("nebpay")
 let nebPay = new NebPay()
 let serialNumber
 export default {

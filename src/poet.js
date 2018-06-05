@@ -55,6 +55,7 @@ class Notapoet {
         }
         return this.data.get(title)
     }
+
 }
 
 module.exports=Notapoet
