@@ -23,11 +23,17 @@ class Notapoet {
                 return obj.toString()
             }
         })
+        LocalContractStorage.defineMapProperty(this,'arrayMap')
+        LocalContractStorage.defineProperty(this,'size')
     }
 
-    init(){}
+    init(){
+        this.size=0
+    }
 
     savePoet(title,content){
+        var index=this.size
+
         if(!title||!content){
             throw new Error("empty title or content")
         }
@@ -46,7 +52,22 @@ class Notapoet {
         poet.content=content
         poet.author=from
 
+        this.arrayMap.put(index,title)
         this.data.put(title,poet)
+        this.size+=1
+    }
+
+    getAllPoet(offset,limit){
+        limit = parseInt(limit)
+        offset = parseInt(offset)
+        offset = offset % this.size
+        var result = []
+        for (var i = offset, j = 0; j < limit; j++) {
+            result.push(this.data.get(this.arrayMap.get(i)))
+            i++
+            i = i % this.size
+        }
+        return result
     }
 
     getPoet(title){
@@ -56,6 +77,9 @@ class Notapoet {
         return this.data.get(title)
     }
 
+    getLen(){
+        return this.size
+    }
 }
 
 module.exports=Notapoet

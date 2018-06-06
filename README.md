@@ -1,6 +1,6 @@
-# dapp-notapoet
+# 不是诗人
 
-> Nas-Dapp
+> 基于Nebulas的Dapp
 
 ## Build Setup
 

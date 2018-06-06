@@ -35,7 +35,8 @@ export default {
             openSimple: false,
             title:'',
             content:'',
-            author:''
+            author:'',
+            poetTitle:[]
         }
     },
     methods:{
@@ -62,7 +63,8 @@ export default {
             var callArgs = "[\"" + this.title + "\",\"" + this.content + "\"]";
             serialNumber = nebPay.call(to, value, callFunction, callArgs, {
                 listener(resp) {
-                    console.log("thecallback is " + resp)
+                    console.log(`the callback is ${resp}`)
+                    this.poetTitle.push(this.title)
                 }
             })
         }

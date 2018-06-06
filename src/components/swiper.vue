@@ -37,7 +37,7 @@ export default {
                     nextEl: '.swiper_button_next'
                 }
             },
-            poet:[]
+            test:[]
         }
     },
     mounted(){
@@ -48,18 +48,20 @@ export default {
         let gas_limit = "2000000"
         let callFunction = "getPoet"
         let callArgs = '[\"不是诗人\"]'
-        console.log(callArgs)
         let contract = {
             "function": callFunction,
             "args": callArgs
         }
-        neb.api.call(from, dappContactAddress, value, nonce, gas_price, gas_limit, contract).then(function (resp) {
+
+        neb.api.call(from, dappContactAddress, value, nonce, gas_price, gas_limit, contract).then(resp => {
             let result = resp.result
             result = JSON.parse(result)
             console.log(`the result is :${result.content}`)
+            // this.test.push(result.content)
+            console.log(this.test)
         })
         .catch(function (err) {
-            console.log("error!!:" + err.message)
+            console.log("error:" + err.message)
         })
     }
 }
