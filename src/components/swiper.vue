@@ -1,10 +1,10 @@
 <template>
     <div id="swiper">
         <swiper :options="swiperOption" style="height:100%">
-            <swiper-slide>
-                <div class="poet-title">不是诗人</div>
-                <div class="poet-content">你可以不是诗人<br>但你可以诗意的活着<br>你能诗意的活着<br>你就是一个诗人<br><br>你可以不是诗人<br>但你可以诗意的活着<br>你能诗意的活着<br>你就是一个诗人</div>
-                <div class="poet-author">Temp</div>
+            <swiper-slide v-for="item in allPoet" :key="item.id">
+                <div class="poet-title">{{item.title}}</div>
+                <div class="poet-content">{{item.content}}</div>
+                <div class="poet-author">{{item.author}}</div>
             </swiper-slide>
             <div class="swiper_button_next" slot="button-next">
                 <span style="font-weight:300">Next</span>
@@ -14,7 +14,7 @@
 </template>
 
 <script>
-let dappContactAddress = "n1g5FmLHcGs8FqMyEApGMCv9uCy9dyJc7G4"
+let dappContactAddress = "n1qHtC6oz5zXQZ1tekDYSjMZN6TgirDiDVP"
 import Nebulas from 'nebulas'
 let Neb = Nebulas.Neb
 let neb = new Neb()
@@ -37,32 +37,43 @@ export default {
                     nextEl: '.swiper_button_next'
                 }
             },
-            test:[]
+            len:'',
+            allPoet:[]
         }
     },
     mounted(){
-        let from = dappContactAddress
-        let value = "0"
-        let nonce = "0"
-        let gas_price = "1000000"
-        let gas_limit = "2000000"
-        let callFunction = "getPoet"
-        let callArgs = '[\"不是诗人\"]'
-        let contract = {
-            "function": callFunction,
-            "args": callArgs
-        }
+        this.nebCall({"function":"getLen"})
+    },
+    methods:{
+        nebCall(contract){
+            let from = dappContactAddress
+            let value = "0"
+            let nonce = "0"
+            let gas_price = "1000000"
+            let gas_limit = "2000000"
+            neb.api.call(from, dappContactAddress, value, nonce, gas_price, gas_limit, contract).then(resp => {
+                this.len=resp.result
+                let contract2={
+                    "function":"getAllPoet",
+                    "args":'[\"0\",\"'+this.len+'\"]'
+                }
+                neb.api.call(from, dappContactAddress, value, nonce, gas_price, gas_limit, contract2).then(resp => {
+                    let result = resp.result
+                    result = JSON.parse(result)
+                    // result.forEach((item,index) => {
+                    //     console.log(item)
+                    // })
+                    this.allPoet=result
+                })
+                .catch(err =>  {
+                    console.log(`error:${err.message}`)
+                })
 
-        neb.api.call(from, dappContactAddress, value, nonce, gas_price, gas_limit, contract).then(resp => {
-            let result = resp.result
-            result = JSON.parse(result)
-            console.log(`the result is :${result.content}`)
-            // this.test.push(result.content)
-            console.log(this.test)
-        })
-        .catch(function (err) {
-            console.log("error:" + err.message)
-        })
+            })         
+            .catch(err => {
+                console.log(`error:${err.message}`)
+            })
+        }
     }
 }
 </script>
@@ -83,8 +94,8 @@ export default {
     cursor: pointer;
     user-select: none;
     position: absolute;
-    bottom:1px;
-    right:4px;
+    bottom:0;
+    right:0;
     z-index: 9999;
 }
 .poet-title,.poet-content,.poet-author{
@@ -98,9 +109,12 @@ export default {
 }
 .poet-content{
     margin-top:20px;
+    max-height: 230px;
+    overflow: hidden;
 }
 .poet-author{
     position: absolute;
-    bottom:20px;
+    bottom:25px;
+    font-weight: 300;
 }
 </style>

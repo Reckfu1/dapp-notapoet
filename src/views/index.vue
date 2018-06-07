@@ -7,13 +7,13 @@
             </div>
         </header>
         <section>
-            <v-swiper></v-swiper>
+            <v-swiper ref='vswiper'></v-swiper>
         </section>
         <mu-container>
-            <mu-dialog title="" width="400" :open.sync="openSimple" transition="fade">
+            <mu-dialog title="" width="400" :open.sync="openSimple" transition="fade" @close="updateView">
                 <div class="upload_popup" @click.stop>
                     <mu-text-field v-model="title" label="Title" label-float full-width color="black" max-length="15" class="label_common_style"></mu-text-field>
-                    <mu-text-field v-model="content" placeholder="Content" multi-line :rows="4" :rows-max="8" full-width color="black" class="label_common_style"></mu-text-field>
+                    <mu-text-field v-model="content" placeholder="Content" multi-line :rows="4" :rows-max="8" full-width color="black" class="label_common_style" max-length="230"></mu-text-field>
                     <mu-text-field v-model="author" label="Author" label-float full-width color="black" class="label_common_style"></mu-text-field>
                     <mu-button flat style="text-transform:none" @click="submit">Confirm</mu-button>
                 </div>
@@ -24,7 +24,7 @@
 
 <script>
 import swiper from '@/components/swiper'
-let dappContactAddress = "n1g5FmLHcGs8FqMyEApGMCv9uCy9dyJc7G4"
+let dappContactAddress = "n1qHtC6oz5zXQZ1tekDYSjMZN6TgirDiDVP"
 import NebPay from 'nebpay'
 let nebPay = new NebPay()
 let serialNumber
@@ -35,8 +35,7 @@ export default {
             openSimple: false,
             title:'',
             content:'',
-            author:'',
-            poetTitle:[]
+            author:''
         }
     },
     methods:{
@@ -53,6 +52,7 @@ export default {
             this.openSimple = false
         },
         submit(){
+            let that=this
             if(!this.title||!this.content){
                 alert('title or content can not be empty')
                 return
@@ -64,9 +64,14 @@ export default {
             serialNumber = nebPay.call(to, value, callFunction, callArgs, {
                 listener(resp) {
                     console.log(`the callback is ${resp}`)
-                    this.poetTitle.push(this.title)
                 }
             })
+            .catch(err => {
+                console.log(`err:${err}`)
+            })
+        },
+        updateView(){
+            this.$refs.vswiper.nebCall({"function":"getLen"})
         }
     },
     components:{
