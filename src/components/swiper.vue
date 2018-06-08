@@ -14,11 +14,14 @@
 </template>
 
 <script>
-let dappContactAddress = "n1qHtC6oz5zXQZ1tekDYSjMZN6TgirDiDVP"
+// 测试网
+// let dappContactAddress="n1qHtC6oz5zXQZ1tekDYSjMZN6TgirDiDVP"
 import Nebulas from 'nebulas'
+let dappContactAddress="n1hhxruiEiMhVn72LfjFR5MZm8kamvkrJgn"
 let Neb = Nebulas.Neb
 let neb = new Neb()
-neb.setRequest(new Nebulas.HttpRequest("https://testnet.nebulas.io"))
+// neb.setRequest(new Nebulas.HttpRequest("https://testnet.nebulas.io"))
+neb.setRequest(new Nebulas.HttpRequest("https://mainnet.nebulas.io"))
 export default {
     data() {
         return {
@@ -56,7 +59,7 @@ export default {
                 this.len=resp.result
                 let contract2={
                     "function":"getAllPoet",
-                    "args":'[\"0\",\"'+this.len+'\"]'
+                    "args":'[\"0\",\"'+this.len+'\"]',
                 }
                 neb.api.call(from, dappContactAddress, value, nonce, gas_price, gas_limit, contract2).then(resp => {
                     let result = resp.result

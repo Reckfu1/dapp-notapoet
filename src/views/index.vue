@@ -28,8 +28,10 @@
 
 <script>
 import swiper from '@/components/swiper'
-let dappContactAddress = "n1qHtC6oz5zXQZ1tekDYSjMZN6TgirDiDVP"
 import NebPay from 'nebpay'
+// 测试网
+// let dappContactAddress="n1qHtC6oz5zXQZ1tekDYSjMZN6TgirDiDVP"
+let dappContactAddress="n1hhxruiEiMhVn72LfjFR5MZm8kamvkrJgn"
 let nebPay = new NebPay()
 let serialNumber
 export default {
