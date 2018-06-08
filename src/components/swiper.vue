@@ -6,8 +6,8 @@
                 <div class="poet-content">{{item.content}}</div>
                 <div class="poet-author">{{item.author}}</div>
             </swiper-slide>
-            <div class="swiper_button_next" slot="button-next">
-                <span style="font-weight:300">Next</span>
+            <div class="swiper_button_next" slot="button-next" :class="{effect_next:isActive}">
+                <span style="font-weight:300" @mouseenter="showLine" @mouseleave="hideLine">Next</span>
             </div>
         </swiper>
     </div>
@@ -38,7 +38,8 @@ export default {
                 }
             },
             len:'',
-            allPoet:[]
+            allPoet:[],
+            isActive:false
         }
     },
     mounted(){
@@ -64,6 +65,7 @@ export default {
                     //     console.log(item)
                     // })
                     this.allPoet=result
+                    this.$emit('state',true)
                 })
                 .catch(err =>  {
                     console.log(`error:${err.message}`)
@@ -73,6 +75,12 @@ export default {
             .catch(err => {
                 console.log(`error:${err.message}`)
             })
+        },
+        showLine(){
+            this.isActive=true
+        },
+        hideLine(){
+            this.isActive=false
         }
     }
 }
@@ -98,6 +106,26 @@ export default {
     right:0;
     z-index: 9999;
 }
+.swiper_button_next span:before{
+    content: '';
+    position: absolute;
+    width:100%;
+    height: 1px;
+    top:20px;
+    background-color: rgba(128,128,128,1);
+    transform:scaleX(0);
+    transition:all .25s ease;
+}
+.effect_next span:before{
+    content: '';
+    position: absolute;
+    width:100%;
+    height: 1px;
+    top:20px;
+    background-color: rgba(0,0,0,1);
+    transform:scaleX(1);
+    /*transition:all .25s ease;*/
+}
 .poet-title,.poet-content,.poet-author{
     user-select: none;
     cursor: default;
@@ -106,9 +134,11 @@ export default {
     font-weight: 300;
     font-size: 16px;
     font-weight: 600;
+    border-bottom:1px solid rgba(0,0,0,.05);
+    padding-bottom: 14px;
 }
 .poet-content{
-    margin-top:20px;
+    margin-top:6px;
     max-height: 230px;
     overflow: hidden;
 }

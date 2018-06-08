@@ -1,5 +1,5 @@
 <template>
-    <div id="index">
+    <div id="index" v-show="show">
         <header>
             <div class="upload" :class="{effect:isActive}">
                 <span @click.stop>Nøt A Poet</span>
@@ -7,18 +7,22 @@
             </div>
         </header>
         <section>
-            <v-swiper ref='vswiper'></v-swiper>
+            <v-swiper ref='vswiper' @state="getState"></v-swiper>
         </section>
         <mu-container>
             <mu-dialog title="" width="400" :open.sync="openSimple" transition="fade" @close="updateView">
                 <div class="upload_popup" @click.stop>
                     <mu-text-field v-model="title" label="Title" label-float full-width color="black" max-length="15" class="label_common_style"></mu-text-field>
                     <mu-text-field v-model="content" placeholder="Content" multi-line :rows="4" :rows-max="8" full-width color="black" class="label_common_style" max-length="230"></mu-text-field>
-                    <mu-text-field v-model="author" label="Author" label-float full-width color="black" class="label_common_style"></mu-text-field>
+                    <mu-text-field v-model="author" label="Author" disabled=false label-float full-width color="black" class="label_common_style"></mu-text-field>
                     <mu-button flat style="text-transform:none" @click="submit">Confirm</mu-button>
                 </div>
             </mu-dialog>
         </mu-container>
+        <mu-snackbar :color="color.color" :open.sync="color.open" position="top">
+            <mu-icon left value="check_circle"></mu-icon>
+            {{color.message}}
+        </mu-snackbar>
     </div>
 </template>
 
@@ -35,7 +39,14 @@ export default {
             openSimple: false,
             title:'',
             content:'',
-            author:''
+            author:'',
+            color: {
+                color: 'success',
+                message: 'Upload Success！',
+                open: false,
+                timeout: 6000
+            },
+            show:false
         }
     },
     methods:{
@@ -64,14 +75,22 @@ export default {
             serialNumber = nebPay.call(to, value, callFunction, callArgs, {
                 listener(resp) {
                     console.log(`the callback is ${resp}`)
+                    that.openColorSnackbar()
                 }
-            })
-            .catch(err => {
-                console.log(`err:${err}`)
             })
         },
         updateView(){
             this.$refs.vswiper.nebCall({"function":"getLen"})
+        },
+        openColorSnackbar () {
+            if (this.color.timer) clearTimeout(this.color.timer)
+            this.color.open = true
+            this.color.timer = setTimeout(() => {
+                this.color.open = false;
+            }, this.color.timeout)
+        },
+        getState(state){
+            this.show=state
         }
     },
     components:{
